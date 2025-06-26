@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:15
+    container_name: rehearsal_pg
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: rehearsaluser
+      POSTGRES_PASSWORD: rehearsalpass
+      POSTGRES_DB: rehearsaldb
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  api:
+    build: ./backend
+    depends_on:
+      - postgres
+    ports:
+      - "4000:4000"
+    env_file:
+      - .env
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+volumes:
+  pgdata:
